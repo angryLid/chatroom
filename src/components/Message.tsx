@@ -10,15 +10,15 @@ interface IProps {
 export const Message = ({ timestamp, message }: IProps) => {
   const [loading, setLoading] = useState(false);
 
-  const [gallary, setGallary] = useState<JSX.Element | null>(null);
+  const [gallary, setGallary] = useState(false);
 
+  const [imgURL, setImgURL] = useState("");
   const showPic = async (path: string) => {
     if (loading) {
       return;
     }
     const url = await downloadFromBucket(path);
-    setGallary(<img className="opacity-100" src={url} alt="current-picture" />);
-    setLoading(false);
+    setImgURL(url);
   };
   return (
     <div>
@@ -41,10 +41,18 @@ export const Message = ({ timestamp, message }: IProps) => {
       )}
       <Modal visible={!!gallary}>
         <div className="relative">
-          {gallary}
+          <img
+            src={imgURL}
+            alt="current-picture"
+            onLoad={() => {
+              setGallary(true);
+              setLoading(false);
+            }}
+          />
+
           <div
             className="h-6 w-6 absolute right-1 -top-7 underline cursor-pointer text-center text-red-600  text-lg"
-            onClick={() => setGallary(null)}
+            onClick={() => setGallary(false)}
           >
             <img src={x} alt="close-preview" />
           </div>

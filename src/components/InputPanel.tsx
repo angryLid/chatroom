@@ -5,8 +5,15 @@ import { uploadToBucket } from "../api/database";
 import photogragh from "../assets/photogragh.svg";
 import x from "../assets/x.svg";
 import { getLS } from "../hooks";
+import { Modal } from "./Modal";
+
 export const InputPanel = () => {
+  const [isSending, setIsSending] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [msg, setMsg] = useState("");
+  const { data: nickname } = useSWR("user", getLS);
   const inputRef = useRef<HTMLInputElement>(null);
+
   const removeImage = () => {
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -14,10 +21,6 @@ export const InputPanel = () => {
     setFile(null);
   };
 
-  const { data: nickname } = useSWR("user", getLS);
-
-  const [file, setFile] = useState<File | null>(null);
-  const [msg, setMsg] = useState("");
   const submit = async () => {
     if (!nickname) {
       return;
@@ -25,20 +28,27 @@ export const InputPanel = () => {
     if (!msg && !file) {
       return;
     }
+
     let image = "";
-    if (file) {
-      const snapshot = await uploadToBucket(file);
-      image = snapshot.metadata.fullPath;
+    setIsSending(true);
+    try {
+      if (file) {
+        const snapshot = await uploadToBucket(file);
+        image = snapshot.metadata.fullPath;
+      }
+
+      await sendMessage({
+        image: image,
+        publisher: nickname,
+        content: msg,
+      });
+      setMsg("");
+      removeImage();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSending(false);
     }
-
-    await sendMessage({
-      image: image,
-      publisher: nickname,
-      content: msg,
-    });
-
-    setMsg("");
-    removeImage();
   };
 
   return (
@@ -103,6 +113,11 @@ export const InputPanel = () => {
           Send
         </button>
       </div>
+      <Modal visible={isSending}>
+        <div className="bg-white rounded-md flex drop-shadow-sm shadow-slate-50 w-3/6 aspect-video justify-center items-center text-2xl font-light text-gray-900">
+          Sending...
+        </div>
+      </Modal>
     </div>
   );
 };

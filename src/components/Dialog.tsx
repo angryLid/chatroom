@@ -12,8 +12,8 @@ export const Dialog = ({ close, visible }: IProps) => {
   const { data: room, mutate: setRoom } = useSWR("room", getLS);
   const { data: user, mutate: setUser } = useSWR("user", getLS);
 
-  const [userLocal, setUserLocal] = useState(user || "");
-  const [roomLocal, setRoomLocal] = useState(room || "");
+  const [userLocal, setUserLocal] = useState(user);
+  const [roomLocal, setRoomLocal] = useState(room);
 
   const [tip, setTip] = useState("");
 
@@ -60,7 +60,7 @@ export const Dialog = ({ close, visible }: IProps) => {
           </label>
           <input
             className="row-start-2 text-black row-end-3 col-start-3 col-end-7 border-b border-gray-800 focus:outline-none px-2"
-            type="text"
+            type="number"
             value={roomLocal}
             placeholder="0 ~ 9999"
             onChange={(e) => setRoomLocal(e.currentTarget.value)}
