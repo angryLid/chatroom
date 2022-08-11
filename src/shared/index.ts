@@ -22,3 +22,21 @@ export function MMslashDD(timestamp: number) {
   const DD = String(time.getDate()).padStart(2, "0");
   return `${MM}/${DD}`;
 }
+const colorList = [
+  "red",
+  "orange",
+  "yellow",
+  "emerald",
+  "teal",
+  "cyan",
+  "blue",
+  "indigo",
+  "violet",
+  "pink",
+] as const;
+export function nameColor(name: string) {
+  if (name.length < 1) {
+    throw new Error("invalid name");
+  }
+  return `text-${colorList[name.charCodeAt(0) % 10]}-500`;
+}

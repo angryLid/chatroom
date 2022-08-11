@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { downloadFromBucket } from "../api/database";
 import x from "../assets/x.svg";
-import { HHmmss, IMessage } from "../shared";
+import { HHmmss, IMessage, nameColor } from "../shared";
 import { AsyncImage } from "./AsyncImage";
 import { Modal } from "./Modal";
 interface IProps {
@@ -11,7 +11,7 @@ interface IProps {
 export const Message = ({ timestamp, message }: IProps) => {
   const [phase, setPhase] = useState<"idle" | "loading" | "loaded">("idle");
   const [$img, set$img] = useState("");
-
+  const [color] = useState(nameColor(message.publisher));
   const showPic = async () => {
     if (phase !== "idle" || !message.image) {
       return;
@@ -24,8 +24,9 @@ export const Message = ({ timestamp, message }: IProps) => {
   return (
     <div>
       <span className="mr-3 text-blue-900 underline font-mono">
-        {HHmmss(Number(timestamp))} {message.publisher}
+        {HHmmss(Number(timestamp))}
       </span>
+      <span className={`${color} mr-4`}>{message.publisher}</span>
       {message.image && (
         <span
           className="text-blue-500 underline"
