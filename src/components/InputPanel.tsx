@@ -53,7 +53,11 @@ export const InputPanel = () => {
 
   return (
     <div className="fixed bottom-0 left-0 z-40">
-      <div className="h-8 bg-white grid-row-1 grid-cols-12 grid-flow-row w-screen grid mp-1">
+      <div
+        className={`h-8 bg-white grid-row-1 grid-cols-12 grid-flow-row w-screen mp-1 ${
+          file ? "grid" : "hidden"
+        }`}
+      >
         <div className="col-start-2 col-end-13 row-start-1 row-end-2 leading-8">
           {file &&
             (file.name.length > 30

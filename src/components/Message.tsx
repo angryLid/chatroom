@@ -2,57 +2,53 @@ import { useState } from "react";
 import { downloadFromBucket } from "../api/database";
 import x from "../assets/x.svg";
 import { HHmmss, IMessage } from "../shared";
+import { AsyncImage } from "./AsyncImage";
 import { Modal } from "./Modal";
 interface IProps {
   timestamp: string;
   message: IMessage;
 }
 export const Message = ({ timestamp, message }: IProps) => {
-  const [loading, setLoading] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "loading" | "loaded">("idle");
+  const [$img, set$img] = useState("");
 
-  const [gallary, setGallary] = useState(false);
-
-  const [imgURL, setImgURL] = useState("");
-  const showPic = async (path: string) => {
-    if (loading) {
+  const showPic = async () => {
+    if (phase !== "idle" || !message.image) {
       return;
     }
-    const url = await downloadFromBucket(path);
-    setImgURL(url);
+    setPhase("loading");
+    const url = await downloadFromBucket(message.image);
+    set$img(`${url}&${Number(new Date())}`);
   };
+
   return (
     <div>
       <span className="mr-3 text-blue-900 underline font-mono">
         {HHmmss(Number(timestamp))} {message.publisher}
       </span>
-      {message.content}
-      {message.image ? (
+      <span className="pr-1">{message.content}</span>
+
+      {message.image && (
         <span
-          className="text-blue-500 underline pl-2"
+          className="text-blue-500 underline"
           onClick={() => {
-            setLoading(true);
-            showPic(message.image || "").catch((e) => console.error(e));
+            showPic().catch((e) => console.log(e));
           }}
         >
-          {loading ? "loading... please wait" : "view pic"}
+          {phase === "loading" ? "loading... please wait" : "view pic"}
         </span>
-      ) : (
-        ""
       )}
-      <Modal visible={!!gallary}>
+      <Modal visible={phase === "loaded"}>
         <div className="relative">
-          <img
-            src={imgURL}
-            alt="current-picture"
-            onLoad={() => {
-              setGallary(true);
-              setLoading(false);
+          <AsyncImage
+            src={$img}
+            toast={() => {
+              setPhase("loaded");
             }}
           />
-
           <div
             className="h-6 w-6 absolute right-1 -top-7 underline cursor-pointer text-center text-red-600  text-lg"
-            onClick={() => setGallary(false)}
+            onClick={() => setPhase("idle")}
           >
             <img src={x} alt="close-preview" />
           </div>

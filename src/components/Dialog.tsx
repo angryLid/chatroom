@@ -12,14 +12,21 @@ export const Dialog = ({ close, visible }: IProps) => {
   const { data: room, mutate: setRoom } = useSWR("room", getLS);
   const { data: user, mutate: setUser } = useSWR("user", getLS);
 
-  const [userLocal, setUserLocal] = useState(user);
-  const [roomLocal, setRoomLocal] = useState(room);
+  const [userLocal, setUserLocal] = useState("");
+  const [roomLocal, setRoomLocal] = useState("");
 
   const [tip, setTip] = useState("");
 
   useEffect(() => {
-    console.info("dialog effect");
-  });
+    if (room) {
+      setRoomLocal(room);
+    }
+    if (user) {
+      setUserLocal(user);
+    }
+    setTip("");
+  }, [room, user]);
+
   const save = (u: string, r: string) => {
     const pattern = /^\d{1,4}$/;
     if (!(u.length >= 2 && u.length <= 6)) {
@@ -66,7 +73,7 @@ export const Dialog = ({ close, visible }: IProps) => {
             onChange={(e) => setRoomLocal(e.currentTarget.value)}
           />
         </div>
-        <div className="mx-2 my-1 text-red-500 text-sm">{tip}</div>
+        <div className="mx-2 my-1 text-red-500 text-sm h-4">{tip}</div>
         <div className="flex justify-evenly flex-shrink-0 flex-wrap items-center  p-4 border-t border-gray-200 rounded-b-md">
           <button
             type="button"

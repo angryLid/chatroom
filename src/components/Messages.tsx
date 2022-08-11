@@ -20,7 +20,7 @@ export const Messages = () => {
   }, [room]);
 
   return (
-    <div className="mb-18 mt-10">
+    <div className="mb-20 mt-10">
       {msgList &&
         Object.keys(msgList).map((key, index) => (
           <div className="my-1" key={index}>
