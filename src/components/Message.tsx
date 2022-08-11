@@ -26,8 +26,6 @@ export const Message = ({ timestamp, message }: IProps) => {
       <span className="mr-3 text-blue-900 underline font-mono">
         {HHmmss(Number(timestamp))} {message.publisher}
       </span>
-      <span className="pr-1">{message.content}</span>
-
       {message.image && (
         <span
           className="text-blue-500 underline"
@@ -38,6 +36,12 @@ export const Message = ({ timestamp, message }: IProps) => {
           {phase === "loading" ? "loading... please wait" : "view pic"}
         </span>
       )}
+      {message.content.length < 12 ? (
+        <span>{message.content}</span>
+      ) : (
+        <div className="w-screen break-all">{message.content}</div>
+      )}
+
       <Modal visible={phase === "loaded"}>
         <div className="relative">
           <AsyncImage
