@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { downloadFromBucket } from "../api/database";
+import { downloadFromBucket } from "../api";
 import x from "../assets/x.svg";
 import { HHmmss, IMessage, nameColor } from "../shared";
 import { AsyncImage } from "./AsyncImage";

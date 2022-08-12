@@ -6,7 +6,8 @@
   "scripts": {
     "start": "vite --host",
     "build": "vite build",
-    "dev": "vercel",
+    "dev": "vite",
+    "watch": "vercel dev --listen 5669",
     "preview": "vite preview",
     "deploy": "vite build && gh-pages -d dist",
     "prepare": "husky install"

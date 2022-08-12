@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import useSWR from "swr";
-import { sendMessage } from "../api";
-import { uploadToBucket } from "../api/database";
+import { sendMessage, uploadToBucket } from "../api";
 import photogragh from "../assets/photogragh.svg";
 import x from "../assets/x.svg";
 import { getLS } from "../hooks";

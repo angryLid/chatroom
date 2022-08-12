@@ -1,8 +1,7 @@
 import { onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { roomPipe } from "../api";
-import { db } from "../api/database";
+import { db, roomPipe } from "../api";
 import { getLS } from "../hooks";
 import type { IMsgList } from "../shared";
 import { Message } from "./Message";
