@@ -1,6 +1,6 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
 
-async function getConfig() {
+const getConfig = async () => {
   const resp = await fetch("/api/config");
   const conf = (await resp.json()) as FirebaseOptions;
   console.log(
@@ -9,7 +9,8 @@ async function getConfig() {
     conf
   );
   return conf;
-}
+};
 
 const conf = await getConfig();
+
 export const app = initializeApp(conf);
