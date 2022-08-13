@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import useSWR from "swr";
-import { sendMessage, uploadToBucket } from "../api";
+import { sendMessage, updateActivity, uploadToBucket } from "../api";
 import photogragh from "../assets/photogragh.svg";
 import x from "../assets/x.svg";
 import { getLS } from "../hooks";
@@ -36,11 +36,14 @@ export const InputPanel = () => {
         image = snapshot.metadata.fullPath;
       }
 
-      await sendMessage({
+      const room = (localStorage.getItem("room") ?? "").padStart(4, "0");
+
+      await sendMessage(room, {
         image: image,
         publisher: nickname,
         content: msg,
       });
+      await updateActivity(room);
       setMsg("");
       removeImage();
     } catch (e) {

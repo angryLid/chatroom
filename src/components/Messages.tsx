@@ -1,7 +1,7 @@
 import { onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { db, roomPipe } from "../api";
+import { db } from "../api";
 import { getLS } from "../hooks";
 import type { IMsgList } from "../shared";
 import { Message } from "./Message";
@@ -11,10 +11,14 @@ export const Messages = () => {
   const [msgList, setMsgList] = useState<IMsgList>({});
 
   useEffect(() => {
-    const unSubscribe = onValue(ref(db, `${roomPipe(room)}/`), (snapshot) => {
-      const data = snapshot.val() as IMsgList;
-      setMsgList(data);
-    });
+    if (!room) return;
+    const unSubscribe = onValue(
+      ref(db, `${room.padStart(4, "0")}/`),
+      (snapshot) => {
+        const data = snapshot.val() as IMsgList;
+        setMsgList(data);
+      }
+    );
     return unSubscribe;
   }, [room]);
 
