@@ -4,8 +4,8 @@ on:
     - cron: "0 19 * * *"
 
 jobs:
-  cron: 
+  cron:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Test-123
-      run: echo Hello Github Actions
+        run: echo Hello Github Actions
