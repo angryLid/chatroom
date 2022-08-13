@@ -1,0 +1,11 @@
+name: Cron Prune
+on:
+  schedule:
+    - cron: "0 19 * * *"
+
+jobs:
+  cron: 
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Test-123
+      run: echo Hello Github Actions
