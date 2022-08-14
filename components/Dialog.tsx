@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { getLS } from "../hooks";
+import { getLS } from "../lib/hooks";
 import { Modal } from "./Modal";
 
 interface IProps {

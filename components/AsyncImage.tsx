@@ -1,3 +1,4 @@
+import NextImage from "next/future/image";
 import { useEffect, useState } from "react";
 
 interface IProps {
@@ -23,5 +24,5 @@ export const AsyncImage = ({ src, toast }: IProps) => {
     }
   }, [src]);
 
-  return loadedSrc === src ? <img src={src} /> : <span> </span>;
+  return loadedSrc === src ? <NextImage src={src} /> : <span> </span>;
 };

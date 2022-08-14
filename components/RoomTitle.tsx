@@ -1,7 +1,8 @@
+import Image from "next/image";
 import { useState } from "react";
 import useSWR from "swr";
-import cog from "../assets/cog.svg";
-import { getLS } from "../hooks";
+import { getLS } from "../lib/hooks";
+import cog from "../public/assets/cog.svg";
 import { Dialog } from "./Dialog";
 
 export const RoomTitle = () => {
@@ -13,9 +14,9 @@ export const RoomTitle = () => {
         <span className="w-2/12 "> </span>
         <span className="w-8/12">Room {room ? room : "0"}</span>
         <span className="w-2/12 h-4/6" onClick={() => setDialog(true)}>
-          <img
+          <Image
             className="h-full w-full stroke-white"
-            src={cog}
+            src={cog as string}
             alt="settings"
           />
         </span>

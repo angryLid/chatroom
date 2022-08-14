@@ -1,9 +1,9 @@
 import { onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { db } from "../api";
-import { getLS } from "../hooks";
-import type { IMsgList } from "../shared";
+import { getLS } from "../lib/hooks";
+import { db } from "../lib/service";
+import type { IMsgList } from "../lib/shared";
 import { Message } from "./Message";
 
 export const Messages = () => {

@@ -1,13 +1,12 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
 
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? "https://chatroom-two.vercel.app"
+    : "http://localhost:5669";
 const getConfig = async () => {
-  const resp = await fetch("/api/config");
+  const resp = await fetch(`${baseURL}/api/config`);
   const conf = (await resp.json()) as FirebaseOptions;
-  console.log(
-    "%c [getConfig()]:",
-    "color:white;background:blue;font-size:13px",
-    conf
-  );
   return conf;
 };
 

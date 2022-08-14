@@ -1,11 +1,11 @@
+import Image from "next/future/image";
 import { useRef, useState } from "react";
 import useSWR from "swr";
-import { sendMessage, updateActivity, uploadToBucket } from "../api";
-import photogragh from "../assets/photogragh.svg";
-import x from "../assets/x.svg";
-import { getLS } from "../hooks";
+import { getLS } from "../lib/hooks";
+import { sendMessage, updateActivity, uploadToBucket } from "../lib/service";
+import photogragh from "../public/assets/photogragh.svg";
+import x from "../public/assets/x.svg";
 import { Modal } from "./Modal";
-
 export const InputPanel = () => {
   const [isSending, setIsSending] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -69,11 +69,11 @@ export const InputPanel = () => {
                 )}`
               : file.name)}
         </div>
-        <img
+        <Image
           className={`col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full ${
             file ? "" : "hidden"
           }`}
-          src={x}
+          src={x as string}
           alt="remove-image"
           onClick={removeImage}
         />
@@ -95,9 +95,9 @@ export const InputPanel = () => {
             }}
           />
 
-          <img
+          <Image
             className="col-start-1 col-end-2 row-start-1 row-end-2 w-full h-full"
-            src={photogragh}
+            src={photogragh as string}
             alt="upload-image"
           />
         </div>

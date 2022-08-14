@@ -1,7 +1,8 @@
+import Image from "next/image";
 import { useState } from "react";
-import { downloadFromBucket } from "../api";
-import x from "../assets/x.svg";
-import { HHmmss, IMessage, nameColor } from "../shared";
+import { downloadFromBucket } from "../lib/service";
+import { HHmmss, IMessage, nameColor } from "../lib/shared";
+import x from "../public/assets/x.svg";
 import { AsyncImage } from "./AsyncImage";
 import { Modal } from "./Modal";
 interface IProps {
@@ -55,7 +56,7 @@ export const Message = ({ timestamp, message }: IProps) => {
             className="h-6 w-6 absolute right-1 -top-7 underline cursor-pointer text-center text-red-600  text-lg"
             onClick={() => setPhase("idle")}
           >
-            <img src={x} alt="close-preview" />
+            <Image src={x as string} alt="close-preview" />
           </div>
         </div>
       </Modal>
