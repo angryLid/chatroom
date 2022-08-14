@@ -1,9 +1,9 @@
 import { FirebaseOptions, initializeApp } from "firebase/app";
 
 const baseURL =
-  process.env.VERCEL_ENV === "development"
+  process.env.NEXT_PUBLIC_VERCEL_ENV === "development"
     ? "http://localhost:5669"
-    : process.env.VERCEL_URL || "";
+    : process.env.NEXT_PUBLIC_VERCEL_URL || "";
 
 const getConfig = async () => {
   const resp = await fetch(`${baseURL}/api/config`);
