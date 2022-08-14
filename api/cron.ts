@@ -6,8 +6,12 @@ interface IRooms {
   [key: string]: number;
 }
 export default async function (req: VercelRequest, res: VercelResponse) {
-  const secret = req.query.secret;
-  if (!secret || secret !== process.env.CRON_SECRET) {
+  if (req.method !== "POST") {
+    res.json({ code: 401 });
+  }
+  const { authorization } = req.headers;
+  const CRON_SECRET = process.env.CRON_SECRET || "";
+  if (!authorization || authorization !== `Bearer ${CRON_SECRET}`) {
     res.json({ code: 401 });
     return;
   }
