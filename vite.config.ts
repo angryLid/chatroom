@@ -1,17 +1,17 @@
-import react from "@vitejs/plugin-react";
 import visualizer from "rollup-plugin-visualizer";
-import { VitePWA } from "vite-plugin-pwa";
 
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import type { ManifestOptions, VitePWAOptions } from "vite-plugin-pwa";
+import { VitePWA } from "vite-plugin-pwa";
 
 const pwaOptions: Partial<VitePWAOptions> = {
   mode: "development",
   base: "/",
-  includeAssets: ["favicon.svg"],
+  includeAssets: ["favicon.ico"],
   manifest: {
-    name: "PWA Router",
-    short_name: "PWA Router",
+    name: "Clipboard",
+    short_name: "Text and image transfer between desktop and mobile.",
     theme_color: "#ffffff",
     icons: [
       {
@@ -75,6 +75,7 @@ const plugins =
 
 export default defineConfig({
   plugins: [react(), VitePWA(pwaOptions), ...plugins],
+  // plugins: [react(), ...plugins],
   server: {
     port: 5669,
   },
