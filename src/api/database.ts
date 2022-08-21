@@ -1,4 +1,4 @@
-import { getDatabase, ref, set } from "firebase/database";
+import { get, getDatabase, ref, set } from "firebase/database";
 import { IMessage } from "../shared";
 import { app } from "./conf";
 
@@ -18,4 +18,12 @@ export async function sendMessage(
 
 export async function updateActivity(room: string) {
   return set(ref(db, `active/${room}`), Number(new Date()));
+}
+
+export async function registerDevice(uuid: string, userAgent: string) {
+  return set(ref(db, `devices/${uuid}`), userAgent);
+}
+
+export async function fetchDevices() {
+  return get(ref(db, "devices"));
 }

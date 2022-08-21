@@ -14,7 +14,7 @@ export const RoomTitle = () => {
         <span className="w-8/12">Room {room ? room : "0"}</span>
         <span className="w-2/12 h-4/6" onClick={() => setDialog(true)}>
           <img
-            className="h-full w-full stroke-white"
+            className="h-full w-full stroke-slate-300"
             src={cog}
             alt="settings"
           />

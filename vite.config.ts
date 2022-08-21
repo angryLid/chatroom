@@ -3,7 +3,7 @@ import visualizer from "rollup-plugin-visualizer";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import type { ManifestOptions, VitePWAOptions } from "vite-plugin-pwa";
-import { VitePWA } from "vite-plugin-pwa";
+// import { VitePWA } from "vite-plugin-pwa";
 
 const pwaOptions: Partial<VitePWAOptions> = {
   mode: "development",
@@ -74,10 +74,10 @@ const plugins =
     : [];
 
 export default defineConfig({
-  plugins: [react(), VitePWA(pwaOptions), ...plugins],
-  // plugins: [react(), ...plugins],
+  // plugins: [react(), VitePWA(pwaOptions), ...plugins],
+  plugins: [react(), ...plugins],
   server: {
-    port: 5669,
+    port: 5670,
   },
   build: {
     target: "esnext",
