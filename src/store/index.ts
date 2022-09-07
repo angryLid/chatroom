@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import { FirebaseOptions, initializeApp } from "firebase/app";
-import {
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  query,
-  where,
-} from "firebase/firestore";
+import { getDocs, getFirestore, query, where } from "firebase/firestore";
 const init = () => {
   const app = initializeApp(
     JSON.parse(
@@ -28,11 +21,6 @@ export const firebaseSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
 
 import {
   createApi,
@@ -78,12 +66,24 @@ const api = createApi({
   }),
 });
 export const { useAddMutation, useGetListQuery } = api;
+
+import firestoreApi from "../api/firestore";
+import clipboard from "src/pages/Clipboard/slice";
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
+    [firestoreApi.reducerPath]: firestoreApi.reducer,
+    clipboard,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware()
+      .concat(api.middleware)
+      .concat(firestoreApi.middleware),
 });
 
 setupListeners(store.dispatch);
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

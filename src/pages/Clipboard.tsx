@@ -14,6 +14,8 @@ import { DesktopComputer } from "../assets/DesktopComputer";
 import { Menu } from "../assets/Menu";
 import { useLocalStorage } from "../shared";
 import { IMessage, useAddMutation, useGetListQuery } from "../store";
+import { MessageBox } from "./Clipboard/components/MessageBox";
+import { MessageList } from "./Clipboard/components/MessageList";
 interface IDeviceView {
   uuid: string;
   os: string;
@@ -26,6 +28,7 @@ interface IDeviceModel {
   uuid: string;
   userAgent: string;
 }
+
 const mapper = (d: IDeviceModel, isMyself = false) => {
   const result = parser(d.userAgent);
   const kind = result.os.name === "Android" ? "mobile" : "desktop";
@@ -154,37 +157,8 @@ export const Clipboard = () => {
           </div>
         </div>
         <div className="bg-slate-100 grow md:flex md:flex-col md:justify-end">
-          <div className="bg-red-100 grow py-4 px-4">
-            {messages?.map((m, i) => (
-              <div key={i} className="bg-white flex my-2 ">
-                <div className="bg-cyan-100 h-10 w-10 p-2 rounded-full">
-                  <UserIcon className="h-6 w-6 stroke-zinc-700" />
-                </div>
-                <div className="bg-purple-100 px-2 py-1 rounded-md relative">
-                  <div className="absolute w-0 h-0 border-8 border-t-transparent border-b-transparent border-l-transparent top-1/2 border-purple-100 -left-4 -translate-y-1/2" />
-                  {m.content}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="fixed bottom-2 left-0   w-screen px-4 md:static md:w-full md:mb-2">
-            <div className="rounded-md w-full flex items-center bg-white shadow-sm focus:ring-blue-300 focus:ring-1">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.currentTarget.value)}
-                className="px-2 outline-0 bg-white rounded-lg h-10 grow focus:ring-blue-300 focus:ring-1 md:px-4"
-                type="text"
-                placeholder="Message..."
-              />
-              <div
-                onClick={() => {
-                  send().catch((e) => console.error(e));
-                }}
-              >
-                <ArrowUpIcon className="h-6 w-6 mx-2 stroke-blue-400 " />
-              </div>
-            </div>
-          </div>
+          <MessageList />
+          <MessageBox />
         </div>
       </div>
     </div>

@@ -3,6 +3,8 @@ export interface IMessage {
   content: string;
   publisher: string;
   image?: string;
+  kind?: string;
+  timestamp?: number;
 }
 
 export interface IMsgList {

@@ -73,9 +73,13 @@ const plugins =
       ]
     : [];
 
+import { resolve } from "path";
 export default defineConfig({
   // plugins: [react(), VitePWA(pwaOptions), ...plugins],
   plugins: [react(), ...plugins],
+  resolve: {
+    alias: [{ find: "src", replacement: resolve(__dirname, "src") }],
+  },
   server: {
     port: 5670,
   },
