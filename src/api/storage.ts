@@ -1,17 +1,20 @@
 // Images upload & download functions
 
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-import { app } from "./conf";
 
+import firebaseApi, { app } from ".";
 const storage = getStorage(app);
 
-export function uploadToBucket(file: File) {
-  const storageRef = ref(storage, uuidv4());
-  return uploadBytes(storageRef, file);
-}
+const storageApi = firebaseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    todo: builder.query({
+      queryFn() {
+        return {
+          data: 0,
+        };
+      },
+    }),
+  }),
+});
 
-export function downloadFromBucket(uuid: string) {
-  const pathReference = ref(storage, uuid);
-  return getDownloadURL(pathReference);
-}
+export const { useTodoQuery } = storageApi;

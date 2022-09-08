@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
-import { addDoc, collection, getDocs, getFirestore } from "firebase/firestore";
-
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import firebaseApi, { app } from ".";
 import { IMessage } from "src/shared";
-import { app } from ".";
+
 const db = getFirestore(app);
 
-const firestoreApi = createApi({
-  reducerPath: "firestoreApi",
-  baseQuery: fakeBaseQuery(),
-  tagTypes: ["Message"],
+const firestoreApi = firebaseApi.injectEndpoints({
   endpoints: (builder) => ({
     addMessage: builder.mutation<string, IMessage>({
       async queryFn(message) {
@@ -31,8 +34,24 @@ const firestoreApi = createApi({
       },
       providesTags: ["Message"],
     }),
+    getBrowsers: builder.query<string[], string>({
+      async queryFn(docName) {
+        await setDoc(doc(db, "browsers", docName), {
+          lastUpdated: serverTimestamp(),
+        });
+        const snapshot = await getDocs(collection(db, "browsers"));
+        // snapshot.forEach(result )
+
+        return {
+          data: [...snapshot.docs.map((i) => i.id)],
+        };
+      },
+    }),
   }),
 });
 
-export const { useAddMessageMutation, useGetMessagesQuery } = firestoreApi;
-export default firestoreApi;
+export const {
+  useAddMessageMutation,
+  useGetMessagesQuery,
+  useGetBrowsersQuery,
+} = firestoreApi;

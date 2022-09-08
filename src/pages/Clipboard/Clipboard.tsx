@@ -1,21 +1,19 @@
 /* eslint-disable no-void */
 import {
-  ArrowUpIcon,
   DesktopComputerIcon,
   GlobeIcon,
   DeviceMobileIcon,
-  UserIcon,
 } from "@heroicons/react/outline";
 import { v4 as uuid } from "@lukeed/uuid";
 import { useEffect, useState } from "react";
+import { useGetBrowsersQuery } from "src/api/firestore";
 import parser from "ua-parser-js";
-import { fetchDevices, registerDevice } from "../api";
-import { DesktopComputer } from "../assets/DesktopComputer";
-import { Menu } from "../assets/Menu";
-import { useLocalStorage } from "../shared";
-import { IMessage, useAddMutation, useGetListQuery } from "../store";
-import { MessageBox } from "./Clipboard/components/MessageBox";
-import { MessageList } from "./Clipboard/components/MessageList";
+const r = parser(navigator.userAgent);
+
+import { Menu } from "../../assets/Menu";
+
+import { MessageBox } from "./components/MessageBox";
+import { MessageList } from "./components/MessageList";
 interface IDeviceView {
   uuid: string;
   os: string;
@@ -29,26 +27,14 @@ interface IDeviceModel {
   userAgent: string;
 }
 
-const mapper = (d: IDeviceModel, isMyself = false) => {
-  const result = parser(d.userAgent);
-  const kind = result.os.name === "Android" ? "mobile" : "desktop";
-  const r: IDeviceView = {
-    uuid: d.uuid,
-    myself: isMyself,
-    os: `${result.os.name || "unknown os"} ${result.os.version || ""}`,
-    browser: `${result.browser.name || "unknown browser"} ${
-      result.browser.version || ""
-    }`,
-    kind,
-  };
-  return r;
-};
 export const Clipboard = () => {
   const [list, setList] = useState<IDeviceView[]>([]);
   const [chosen, setChosen] = useState<IDeviceView>();
 
   const [drawerIsShow, setDrawerIsShow] = useState(false);
-  const [input, setInput] = useState("");
+  const { data: browsers, isSuccess } = useGetBrowsersQuery(
+    `${r.os.name ?? "Unknown"} ${r.browser.name ?? "Unknown"}`
+  );
   useEffect(() => {
     let ua: IDeviceModel = {
       uuid: uuid(),
@@ -59,71 +45,28 @@ export const Clipboard = () => {
       ua = JSON.parse(uaStr) as IDeviceModel;
     } else {
       localStorage.setItem("userAgent", JSON.stringify(ua));
-      registerDevice(ua.uuid, ua.userAgent).catch((e) => console.error(e));
+      // registerDevice(ua.uuid, ua.userAgent).catch((e) => console.error(e));
     }
-  }, []);
-  useEffect(() => {
-    const ua = JSON.parse(
-      localStorage.getItem("userAgent") || "{}"
-    ) as IDeviceModel;
-    fetchDevices()
-      .then((snapshot) => {
-        return snapshot.val() as { [key: string]: string };
-      })
-      .then((devices) => {
-        const list: IDeviceView[] = [
-          {
-            uuid: uuid(),
-            os: "Aggravation",
-            browser: "from all devices",
-            myself: false,
-            kind: "aggravation",
-          },
-        ];
-        for (const [uuid, uaStr] of Object.entries(devices)) {
-          list.push(
-            mapper(
-              {
-                uuid: uuid,
-                userAgent: uaStr,
-              },
-              ua.uuid === uuid
-            )
-          );
-        }
-        setList(list);
-        setChosen(list[0]);
-      })
-      .catch((e) => console.error(e));
   }, []);
 
-  const [UA, setUA] = useLocalStorage("userAgent", uuid());
-  const [add, result] = useAddMutation();
-  const { data: mList } = useGetListQuery();
-  const send = async () => {
-    const message: IMessage = {
-      publisher: UA,
-      kind: "text/plain",
-      content: input,
-      timestamp: Number(new Date()),
-    };
-    await add(message);
-  };
-  const [messages, setMessages] = useState<IMessage[]>([]);
-  useEffect(() => {
-    if (!mList) {
-      return;
-    }
-    setMessages(mList);
-  });
   return (
     <div className="h-screen w-screen flex">
       <div className="w-1/4 lg:w-1/5 p-2 h-full hidden md:block">
-        {list.map((v, i) => (
-          <div key={i} onClick={() => setChosen(v)}>
-            <Device val={v} selected={v.uuid === chosen?.uuid} />
-          </div>
-        ))}
+        {isSuccess &&
+          browsers.map((v, i) => (
+            <div key={i}>
+              <Device
+                val={{
+                  browser: v,
+                  os: v,
+                  uuid: "",
+                  myself: false,
+                  kind: "desktop",
+                }}
+                selected={chosen?.uuid === ""}
+              />
+            </div>
+          ))}
       </div>
       <div className="flex flex-col w-full md:w-3/4 h-full grow">
         <div className="h-16 shadow-lg flex items-center text-lg px-4 font-light justify-center relative">

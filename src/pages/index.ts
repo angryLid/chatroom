@@ -1,3 +1,3 @@
 export * from "./Admin";
-export * from "./Clipboard";
+export * from "./Clipboard/Clipboard";
 //
