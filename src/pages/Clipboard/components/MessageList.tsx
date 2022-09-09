@@ -1,8 +1,10 @@
 import { UserIcon } from "@heroicons/react/outline";
 import { useGetMessagesQuery } from "src/api/firestore";
+import { useAppSelector } from "src/store/hooks";
 
 export const MessageList = () => {
-  const { data: messages } = useGetMessagesQuery();
+  const { currDocKey } = useAppSelector((state) => state.clipboard);
+  const { data: messages } = useGetMessagesQuery(currDocKey);
   return (
     <div className=" grow py-4 px-4">
       {messages?.map((m, i) => (

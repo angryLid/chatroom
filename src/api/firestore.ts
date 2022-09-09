@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 import {
   doc,
-  getDoc,
   getFirestore,
+  query,
   serverTimestamp,
   setDoc,
+  where,
 } from "firebase/firestore";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import firebaseApi, { app } from ".";
 import { IMessage } from "src/shared";
+import { BrowserDocument } from "src/shared/types";
 
 const db = getFirestore(app);
 
@@ -23,9 +25,13 @@ const firestoreApi = firebaseApi.injectEndpoints({
       },
       invalidatesTags: ["Message"],
     }),
-    getMessages: builder.query<IMessage[], void>({
-      async queryFn() {
-        const snapshot = await getDocs(collection(db, "messages"));
+    getMessages: builder.query<IMessage[], string>({
+      async queryFn(publisher) {
+        const q = query(
+          collection(db, "messages"),
+          where("publisher", "==", publisher)
+        );
+        const snapshot = await getDocs(q);
         const data: IMessage[] = [];
         snapshot.forEach((d) => data.push(d.data() as IMessage));
         return {
@@ -34,16 +40,24 @@ const firestoreApi = firebaseApi.injectEndpoints({
       },
       providesTags: ["Message"],
     }),
-    getBrowsers: builder.query<string[], string>({
-      async queryFn(docName) {
-        await setDoc(doc(db, "browsers", docName), {
+    getBrowsers: builder.query<BrowserDocument[], BrowserDocument>({
+      async queryFn(browser) {
+        await setDoc(doc(db, "browsers", browser.docKey), {
+          ...browser,
           lastUpdated: serverTimestamp(),
         });
         const snapshot = await getDocs(collection(db, "browsers"));
-        // snapshot.forEach(result )
 
         return {
-          data: [...snapshot.docs.map((i) => i.id)],
+          data: [
+            ...snapshot.docs.map((i) => ({
+              docKey: i.id,
+              osName: i.get("osName") as string,
+              osVersion: i.get("osVersion") as string,
+              browserName: i.get("browserName") as string,
+              browserVersion: i.get("browserVersion") as string,
+            })),
+          ],
         };
       },
     }),

@@ -5,7 +5,9 @@ import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import { setEditingMessage } from "../slice";
 
 export const MessageBox = () => {
-  const { editingMessage } = useAppSelector((state) => state.clipboard);
+  const { editingMessage, currDocKey } = useAppSelector(
+    (state) => state.clipboard
+  );
   const dispatch = useAppDispatch();
   const [trigger] = useAddMessageMutation();
   return (
@@ -22,7 +24,7 @@ export const MessageBox = () => {
           onClick={() => {
             dispatch(setEditingMessage(""));
             void trigger({
-              publisher: "UA",
+              publisher: currDocKey,
               kind: "text/plain",
               content: editingMessage,
               timestamp: Number(new Date()),
