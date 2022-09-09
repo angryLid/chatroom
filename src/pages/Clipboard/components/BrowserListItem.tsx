@@ -1,6 +1,7 @@
 import {
   DesktopComputerIcon,
   DeviceMobileIcon,
+  GlobeIcon,
 } from "@heroicons/react/outline";
 
 import { BrowserDocument } from "src/shared/types";
@@ -15,6 +16,7 @@ export const BrowserListItem = ({ doc }: Props) => {
   const { me, currDocKey } = useAppSelector((state) => state.clipboard);
   const { docKey } = doc;
   const onClick = () => dispatch(setCurrent(docKey));
+  const isCollections = docKey.includes("Collections");
   const isDesktop =
     docKey.includes("Mac") ||
     docKey.includes("Win") ||
@@ -30,7 +32,9 @@ export const BrowserListItem = ({ doc }: Props) => {
       } h-14 md:h-20 md:rounded-xl cursor-pointer flex items-center p-2`}
       onClick={onClick}
     >
-      {isDesktop ? (
+      {isCollections ? (
+        <GlobeIcon className={className} />
+      ) : isDesktop ? (
         <DesktopComputerIcon className={className} />
       ) : (
         <DeviceMobileIcon className={className} />

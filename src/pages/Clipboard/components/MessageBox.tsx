@@ -5,13 +5,18 @@ import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import { setEditingMessage } from "../slice";
 
 export const MessageBox = () => {
-  const { editingMessage, currDocKey } = useAppSelector(
+  const { editingMessage, currDocKey, me } = useAppSelector(
     (state) => state.clipboard
   );
   const dispatch = useAppDispatch();
   const [trigger] = useAddMessageMutation();
+  const hidden = me !== currDocKey && currDocKey !== "Collections";
   return (
-    <div className="fixed bottom-2 left-0   w-screen px-4 md:static md:w-full md:mb-2">
+    <div
+      className={`fixed bottom-2 left-0 w-screen px-4 md:static md:w-full md:mb-2 ${
+        hidden ? "hidden" : ""
+      }`}
+    >
       <div className="rounded-md w-full flex items-center bg-white shadow-sm focus:ring-blue-300 focus:ring-1">
         <input
           value={editingMessage}

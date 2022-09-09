@@ -27,10 +27,11 @@ const firestoreApi = firebaseApi.injectEndpoints({
     }),
     getMessages: builder.query<IMessage[], string>({
       async queryFn(publisher) {
-        const q = query(
-          collection(db, "messages"),
-          where("publisher", "==", publisher)
-        );
+        const messagesRef = collection(db, "messages");
+        const q =
+          publisher !== "Collections"
+            ? query(messagesRef, where("publisher", "==", publisher))
+            : query(messagesRef, where("publisher", "!=", "Unknown"));
         const snapshot = await getDocs(q);
         const data: IMessage[] = [];
         snapshot.forEach((d) => data.push(d.data() as IMessage));
@@ -50,6 +51,13 @@ const firestoreApi = firebaseApi.injectEndpoints({
 
         return {
           data: [
+            {
+              docKey: "Collections",
+              osName: "Collections",
+              osVersion: "",
+              browserName: "All of the following",
+              browserVersion: "",
+            },
             ...snapshot.docs.map((i) => ({
               docKey: i.id,
               osName: i.get("osName") as string,

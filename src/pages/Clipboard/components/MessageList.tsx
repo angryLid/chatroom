@@ -1,13 +1,10 @@
 import { UserIcon } from "@heroicons/react/outline";
-import { useGetMessagesQuery } from "src/api/firestore";
-import { useAppSelector } from "src/store/hooks";
+import { IMessage } from "src/shared";
 
-export const MessageList = () => {
-  const { currDocKey } = useAppSelector((state) => state.clipboard);
-  const { data: messages } = useGetMessagesQuery(currDocKey);
+export const MessageList = ({ messages }: { messages: IMessage[] }) => {
   return (
     <div className=" grow py-4 px-4">
-      {messages?.map((m, i) => (
+      {messages.map((m, i) => (
         <div key={i} className="flex my-2 gap-3">
           <div className="bg-gray-300 h-10 w-10 p-2 rounded-full">
             <UserIcon className="h-6 w-6 stroke-zinc-700" />
