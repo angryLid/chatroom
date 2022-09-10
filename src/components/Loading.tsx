@@ -1,4 +1,3 @@
-import "./_style.css";
 export const Loading = () => {
   const className =
     "animate-pulse origin-[40px_40px] after:content-[''] after:block after:absolute after:top-[3px] after:left-[37px] after:w-[6px] after:h-[18px] after:rounded-[20%] after:bg-white ";
