@@ -2,6 +2,7 @@
 import {
   doc,
   getFirestore,
+  onSnapshot,
   query,
   serverTimestamp,
   setDoc,
@@ -13,6 +14,13 @@ import { IMessage } from "src/shared";
 import { BrowserDocument } from "src/shared/types";
 
 const db = getFirestore(app);
+
+const getQuery = (publisher: string) => {
+  const messagesRef = collection(db, "messages");
+  return publisher !== "Collections"
+    ? query(messagesRef, where("publisher", "==", publisher))
+    : query(messagesRef, where("publisher", "!=", "Unknown"));
+};
 
 const firestoreApi = firebaseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -27,17 +35,33 @@ const firestoreApi = firebaseApi.injectEndpoints({
     }),
     getMessages: builder.query<IMessage[], string>({
       async queryFn(publisher) {
-        const messagesRef = collection(db, "messages");
-        const q =
-          publisher !== "Collections"
-            ? query(messagesRef, where("publisher", "==", publisher))
-            : query(messagesRef, where("publisher", "!=", "Unknown"));
-        const snapshot = await getDocs(q);
-        const data: IMessage[] = [];
-        snapshot.forEach((d) => data.push(d.data() as IMessage));
+        await Promise.resolve(0);
+        // const q = getQuery(publisher);
+        // const snapshot = await getDocs(q);
+        // const data: IMessage[] = [];
+        // snapshot.forEach((d) => data.push(d.data() as IMessage));
         return {
-          data,
+          data: [],
         };
+      },
+      async onCacheEntryAdded(
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        // let unsub: ReturnType<typeof onSnapshot>;
+
+        await cacheDataLoaded;
+        const q = getQuery(arg);
+        const unsub = onSnapshot(q, (snapshot) => {
+          const toUpdate = snapshot.docs.map((doc) => doc.data()) as IMessage[];
+
+          console.log(" data: ", toUpdate);
+          updateCachedData(() => toUpdate);
+        });
+
+        await cacheEntryRemoved;
+        // perform cleanup steps once the `cacheEntryRemoved` promise resolves
+        unsub();
       },
       providesTags: ["Message"],
     }),
