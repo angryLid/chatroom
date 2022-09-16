@@ -2,10 +2,10 @@
 
 ## Todolist 
 * upload files
-* streaming message update.
+* <del>streaming message update.</del>
 * on/offline hint
 * Loading Sketlon
-* mobile layout not align
+* <del>mobile layout not align</del>
 * fix mobile layout unexcepted margin 
 * dark mode
 * PWA support.

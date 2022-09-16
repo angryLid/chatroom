@@ -13,7 +13,7 @@ export const MessageBox = () => {
   const hidden = me !== currDocKey && currDocKey !== "Collections";
   return (
     <div
-      className={`fixed bottom-2 left-0 w-screen px-4 md:static md:w-full md:mb-2 ${
+      className={`bg-slate-100 left-0 w-screen px-4 md:static md:w-full py-2 ${
         hidden ? "hidden" : ""
       }`}
     >

@@ -29,7 +29,7 @@ export const BrowserListItem = ({ doc }: Props) => {
     <div
       className={`${
         selected ? "bg-blue-400" : "hover:bg-slate-200"
-      } h-14 md:h-20 md:rounded-xl cursor-pointer flex items-center p-2`}
+      } h-14 md:h-20 md:rounded-xl cursor-pointer flex items-center px-4 py-2`}
       onClick={onClick}
     >
       {isCollections ? (
@@ -39,7 +39,7 @@ export const BrowserListItem = ({ doc }: Props) => {
       ) : (
         <DeviceMobileIcon className={className} />
       )}
-      <div className={`${selected ? "text-white" : "text-black"} p-2 grow`}>
+      <div className={`${selected ? "text-white" : "text-black"} px-4 grow`}>
         <div>
           {doc.osName} {doc.osVersion}
         </div>
