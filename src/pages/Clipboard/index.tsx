@@ -1,7 +1,6 @@
 /* eslint-disable no-void */
 import { MenuIcon } from "@heroicons/react/outline";
-import { useGetBrowsersQuery, useGetMessagesQuery } from "src/api/firestore";
-import { Loading } from "src/components/Loading";
+import { useGetBrowsersQuery } from "src/api/firestore";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import { BrowserListItem, MessageBox, MessageList } from "./components";
 import { toggleDropDown } from "./slice";
@@ -11,17 +10,11 @@ export const Clipboard = () => {
   const { currDocKey, dropDown, browserDocument } = useAppSelector(
     (state) => state.clipboard
   );
-  const {
-    data: browsers,
-    isSuccess,
-    isLoading,
-  } = useGetBrowsersQuery(browserDocument);
+  const { data: browsers, isSuccess } = useGetBrowsersQuery(browserDocument);
 
-  const { data: messages, isLoading: isLoading2 } =
-    useGetMessagesQuery(currDocKey);
   return (
     <div className="h-screen w-screen flex">
-      {isLoading && isLoading2 && <Loading />}
+      {/* {isLoading && isLoading2 && <Loading />} */}
       <div
         className={`md:w-1/4 md:p-2 lg:w-1/5 h-full md:block md:static absolute top-14 left-0 bg-white w-screen z-40 ${
           dropDown ? "block" : "hidden"
@@ -48,12 +41,9 @@ export const Clipboard = () => {
             {currDocKey}
           </div>
         </div>
-        <div className="bg-slate-100 grow overflow-x-scroll	px-4 py-2">
-          {messages && <MessageList messages={messages} />}
-        </div>
-        <div>
-          <MessageBox />
-        </div>
+
+        <MessageList />
+        <MessageBox />
       </div>
     </div>
   );

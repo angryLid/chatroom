@@ -1,10 +1,21 @@
 import { UserIcon } from "@heroicons/react/outline";
-import { IMessage } from "src/shared";
+import { useEffect, useRef } from "react";
+import { useGetMessagesQuery } from "src/api/firestore";
+import { useAppSelector } from "src/store/hooks";
 
-export const MessageList = ({ messages }: { messages: IMessage[] }) => {
+export const MessageList = () => {
+  const el = useRef<HTMLDivElement>(null);
+  const { currDocKey } = useAppSelector((state) => state.clipboard);
+  const { data: messages } = useGetMessagesQuery(currDocKey);
+
+  useEffect(() => {
+    console.info("messages update");
+    el.current?.scrollTo({ top: el.current.scrollHeight, behavior: "smooth" });
+  }, [messages]);
+
   return (
-    <>
-      {messages.map((m, i) => (
+    <div className="bg-slate-100 grow overflow-x-scroll	px-4 py-2" ref={el}>
+      {messages?.map((m, i) => (
         <div key={i} className="flex my-2 gap-3">
           <div className="bg-gray-300 h-10 w-10 p-2 rounded-full">
             <UserIcon className="h-6 w-6 stroke-zinc-700" />
@@ -15,6 +26,6 @@ export const MessageList = ({ messages }: { messages: IMessage[] }) => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
