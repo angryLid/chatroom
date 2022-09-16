@@ -3,6 +3,7 @@ import {
   doc,
   getFirestore,
   onSnapshot,
+  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -18,8 +19,17 @@ const db = getFirestore(app);
 const getQuery = (publisher: string) => {
   const messagesRef = collection(db, "messages");
   return publisher !== "Collections"
-    ? query(messagesRef, where("publisher", "==", publisher))
-    : query(messagesRef, where("publisher", "!=", "Unknown"));
+    ? query(
+        messagesRef,
+        where("publisher", "==", publisher)
+        // orderBy("timestamp")
+      )
+    : query(
+        messagesRef,
+        // where("publisher", "!=", "Unknown"),
+        // orderBy("publisher"),
+        orderBy("timestamp")
+      );
 };
 
 const firestoreApi = firebaseApi.injectEndpoints({
@@ -31,7 +41,7 @@ const firestoreApi = firebaseApi.injectEndpoints({
           data: docRef.id,
         };
       },
-      invalidatesTags: ["Message"],
+      // invalidatesTags: ["Message"],
     }),
     getMessages: builder.query<IMessage[], string>({
       async queryFn(publisher) {
@@ -63,7 +73,7 @@ const firestoreApi = firebaseApi.injectEndpoints({
         // perform cleanup steps once the `cacheEntryRemoved` promise resolves
         unsub();
       },
-      providesTags: ["Message"],
+      // providesTags: ["Message"],
     }),
     getBrowsers: builder.query<BrowserDocument[], BrowserDocument>({
       async queryFn(browser) {
