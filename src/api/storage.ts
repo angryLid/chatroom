@@ -14,7 +14,38 @@ const storageApi = firebaseApi.injectEndpoints({
         };
       },
     }),
+    uploadFile: builder.mutation<null, { file: File; id: string }>({
+      async queryFn({ id, file }) {
+        try {
+          const fileRef = ref(storage, `files/${id}`);
+          await uploadBytes(fileRef, file);
+          return {
+            data: null,
+          };
+        } catch (error) {
+          return {
+            error,
+          };
+        }
+      },
+    }),
+    downloadFile: builder.query<string, string>({
+      async queryFn(id) {
+        try {
+          const fileRef = ref(storage, `files/${id}`);
+          const url = await getDownloadURL(fileRef);
+          return {
+            data: url,
+          };
+        } catch (error) {
+          return {
+            error,
+          };
+        }
+      },
+    }),
   }),
 });
 
-export const { useTodoQuery } = storageApi;
+export const { useTodoQuery, useUploadFileMutation, useLazyDownloadFileQuery } =
+  storageApi;
